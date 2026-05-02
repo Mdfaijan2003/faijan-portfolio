@@ -1,408 +1,320 @@
-import { useState, useRef } from "react"
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const data = {
+// SVG as React Component
+import PythonIcon from "../assets/udemy courses moocs.svg";
+import Business from "../assets/udemy 3.5.svg";
+import QuickBooks from "../assets/UC-180.5hr.svg";
+import Critical from "../assets/Critical thinking udemy.svg";
+import Finance from "../assets/certificate introduction to basics of finanace.svg";
+
+// (Optional) Example image import (recommended instead of /public path)
+// import btechImg from "../assets/certificates/btech.jpg";
+
+const educationData = {
   Academic: [
     {
-      id: 1,
+      id: "btech",
       label: "B.Tech",
       title: "B.Tech in Computer Science",
       institution: "Netaji Subhash Engineering College",
-      year: "2022 – Present",
+      year: "2023 – Present",
+      score: "CGPA: 8.5",
       details: [
         "Data Structures & Algorithms",
         "Operating Systems",
         "Database Management Systems",
         "Full Stack Development",
-        "Machine Learning",
-        "Cloud Computing",
-        "Cryptography",
-        "System Design",
+        "C++ Development",
+        "Windows Development",
       ],
-      image: "/certificates/btech.jpg",
+      image: "/certificates/btech.jpg", // or use imported image
     },
     {
-      id: 2,
-      label: "12th Standard",
-      title: "12th Standard | Higher Secondary Education",
-      institution: "The Crescent School - West Bengal Board",
-      year: "2020 – 2022",
-      details: [
-        "Proficiency in Mathematics",
-        "Science Fundamentals",
-        "Physics Enthusiast",
-        "Hands on laboratory skills",
-        "Problem Solving",
-        "Critical Thinking",
-        "English Language Skills",
-      ],
-      image: "/certificates/12th.jpg",
-    },
-    {
-      id: 3,
-      label: "10th Standard",
-      title: "10th Standard | Secondary Education",
-      institution: "St. Soldier Convent High School - West Bengal Board",
+      id: "Class X",
+      label: "Class X",
+      title: "Secondary Education",
+      institution: "St. Soldier Convent High School",
       year: "2019 – 2020",
-      details: [
-        "Proficiency in Mathematics",
-        "Science Fundamentals",
-        "Effective Communication",
-        "Problem Solving",
-        "Critical Thinking",
-        "English Language Skills",
-      ],
-      image: "/certificates/10th.jpg",
+      score: "Percentage: 70%",
+
+      details: ["Science", "Maths", "English", "Bengali"],
+      image: "/certificates/btech.jpg", // or use imported image
+    },
+    {
+      id: "Class XII",
+      label: "Class XII",
+      title: "Higher Secondary Education",
+      institution: "St. Soldier Convent High School",
+      year: "2020 – 2022",
+      score: "Percentage: 80%",
+
+      details: ["Science", "Maths", "English"],
+      image: "/certificates/btech.jpg", // or use imported image
     },
   ],
 
   Technical: [
     {
-      id: 4,
-      label: "C++",
-      title: "C++ Programming Certification",
-      institution: "YouTube - CodeWithHarry",
-      year: "2023",
-      details: ["Competitive Programming", "Object-Oriented Programming", "Data Structures"],
-      image: "/certificates/cpp.jpg",
-    },
-    {
-      id: 5,
-      label: "C",
-      title: "C Programming Certification",
-      institution: "Netaji Subhash Engineering College",
-      year: "2023",
-      details: ["Procedural Programming", "Memory Management", "System Programming"],
-      image: "/certificates/c.jpg",
-    },
-    {
-      id: 6,
-      label: "JavaScript",
-      title: "JavaScript Programming Certification",
-      institution: "Udemy - Hitesh Choudhary",
-      year: "2024 - Present",
-      details: ["Web Development", "Backend Development", "Object-Oriented Programming", "Data Structures"],
-      image: "/certificates/js.jpg",
-    },
-    {
-      id: 7,
-      label: "HTML & CSS",
-      title: "HTML & CSS Programming Certification",
-      institution: "Udemy - Hitesh Choudhary",
-      year: "2024",
-      details: ["Web Development", "Web Design", "Responsive Design", "Flexbox & Grid"],
-      image: "/certificates/html-css.jpg",
-    },
-    {
-      id: 8,
-      label: "React",
-      title: "React Programming Certification",
-      institution: "Udemy - Hitesh Choudhary",
-      year: "2025",
-      details: ["Web Development", "Component Based Architecture", "Hooks & State Management", "Responsive Design"],
-      image: "/certificates/react.jpg",
-    },
-    {
-      id: 9,
-      label: "TailwindCSS",
-      title: "TailwindCSS Programming Certification",
-      institution: "Udemy - Hitesh Choudhary",
-      year: "2025",
-      details: ["Web Development", "Utility-First CSS", "Responsive Design", "Custom Configuration"],
-      image: "/certificates/tailwindcss.jpg",
-    },
-    {
-      id: 10,
-      label: "Next.js",
-      title: "Next.js Programming Certification",
-      institution: "Udemy - Hitesh Choudhary",
-      year: "2025",
-      details: ["Web Development", "Server Side Rendering", "API Routes", "Static Site Generation"],
-      image: "/certificates/nextjs.jpg",
-    },
-    {
-      id: 11,
-      label: "Node.js",
-      title: "Node.js Programming Certification",
-      institution: "Udemy - Hitesh Choudhary",
-      year: "2025",
-      details: ["Backend Development", "API Development", "Authentication", "Database Integration"],
-      image: "/certificates/nodejs.jpg",
-    },
-    {
-      id: 12,
-      label: "MongoDB",
-      title: "MongoDB Programming Certification",
-      institution: "Udemy - Hitesh Choudhary",
-      year: "2025",
-      details: ["NoSQL Databases", "Data Modeling", "Aggregation Pipeline", "Performance Optimization"],
-      image: "/certificates/mongodb.jpg",
-    },
-    {
-      id: 13,
+      id: "python",
       label: "Python",
       title: "Python & Flask Certification",
-      institution: "Online Certification",
+      institution: "Udemy Online Certification",
       year: "2024",
-      details: ["Flask Framework", "Backend APIs", "Database Integration"],
-      image: "/certificates/python.jpg",
-    },
-  ],
-
-  "Data Structure & Algorithm": [
-    {
-      id: 14,
-      label: "LeetCode",
-      title: "LeetCode: 200+ Problems Solved",
-      institution: "LeetCode",
-      year: "2023 - Present",
+      score: "9.5 Hours",
       details: [
-        "Data Structures Implementation",
-        "Algorithm Optimization",
-        "Problem Solving Patterns",
+        "Flask Web Framework",
+        "RESTful APIs",
+        "Database Integration",
+        "Deployment",
       ],
-      image: "/certificates/leetcode.jpg",
+      image: PythonIcon, // ✅ FIXED
     },
     {
-      id: 15,
-      label: "TakeUForward",
-      title: "TUF: Striver A2Z DSA Series",
-      institution: "TakeUForward",
-      year: "2023 - 2024",
+      id: "webdev",
+      label: "Web Dev",
+      title: "Full Stack Web Development",
+      institution: "UDEMY",
+      year: "2025",
+      score: "Advanced",
       details: [
-        "Comprehensive DSA Coverage",
-        "Interview Preparation",
-        "Competitive Programming",
+        "React & Tailwind CSS",
+        "Node.js Backend",
+        "Web Performance",
+        "HTML",
+        "CSS",
+        "TailwindCSS",
+        "MongoDB",
+        "NEXT.js",
       ],
-      image: "/certificates/tuf.jpg",
+      image: Business,
+    },
+    {
+      id: "QuickBooks",
+      label: "QuickBooks",
+      title: "QuickBooks : A Comprehensive Guide",
+      institution: "Udemy",
+      year: "2025",
+      score: "Advanced",
+      details: [
+        "Financial Management",
+        "Bookkeeping",
+        "Invoicing & Payments",
+        "Tax Preparation",
+      ],
+      image: QuickBooks,
+    },
+    {
+      id: "Critical Thinking",
+      label: "Critical Thinking",
+      title: "Critical Thinking Masterclass: Boost Your Problem-Solving Skills",
+      institution: "Udemy",
+      year: "2024",
+      score: "Advanced",
+      details: [
+        "Logical Reasoning",
+        "Analytical Thinking",
+        "Creative Problem Solving",
+        "Decision Making",
+      ],
+      image: Critical,
     },
   ],
 
   Business: [
     {
-      id: 16,
+      id: "finance",
       label: "Finance",
       title: "Introduction to Basics of Finance",
-      institution: "SimpliLearn",
+      institution: "Professional Certification",
       year: "2024",
-      details: ["Financial Statements", "Budgeting", "Investment Basics"],
-      image: "../assets/certificate introduction to basics of finanace.svg",
+      score: "Completed",
+      details: [
+        "Financial Statements",
+        "Budgeting & Planning",
+        "Investment Analysis",
+        "Risk Management",
+      ],
+      image: Finance,
     },
     {
-      id: 17,
-      label: "Critical Thinking",
-      title: "Introduction to Critical Thinking",
-      institution: "Certification",
-      year: "2024",
-      details: ["Critical Analysis", "Problem Solving", "Decision Making"],
-      image: "../assets/Critical thinking udemy.svg",
-    },
-    {
-      id: 18,
-      label: "Digital Marketing",
-      title: "Introduction to Digital Marketing",
-      institution: "Certification",
-      year: "2025",
-      details: ["Digital Marketing", "SEO", "Content Marketing", "Social Media Strategy"],
-      image: "../assets/UC-40.5htr.svg",
-    },
-    {
-      id: 19,
-      label: "QuickBooks",
-      title: "Mastering QuickBooks",
-      institution: "Certification",
-      year: "2025",
-      details: ["Accounting", "Bookkeeping", "Financial Reporting", "Payroll Management"],
-      image: "../assets/UC-180.5hr.svg",
-    },
-    {
-      id: 20,
+      id: "Entrepreneurship",
       label: "Entrepreneurship",
-      title: "Entrepreneurship and Business Management",
-      institution: "Udemy",
+      title: "Introduction to Entrepreneurship",
+      institution: "Professional Certification",
       year: "2024",
-      details: ["Business Strategy", "Startup Fundamentals", "Management Principles"],
-      image: "../assets/udemy 3.5.svg",
+      score: "Completed",
+      details: [
+        "Business Planning",
+        "Market Research",
+        "Funding & Finance",
+        "Growth Strategies",
+      ],
+      image: Business,
     },
   ],
-}
+};
 
 export default function EducationSection() {
-  const categories = Object.keys(data)
-  const [activeCategory, setActiveCategory] = useState(categories[0])
-  const [activeItem, setActiveItem] = useState(data[categories[0]][0])
+  const categories = Object.keys(educationData);
+  const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const [activeItemId, setActiveItemId] = useState(
+    educationData[categories[0]][0].id,
+  );
 
-  const containerRef = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  })
-
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [40, -40])
+  const activeItem = educationData[activeCategory].find(
+    (item) => item.id === activeItemId,
+  );
 
   const handleCategoryChange = (cat) => {
-    setActiveCategory(cat)
-    setActiveItem(data[cat][0])
-  }
+    setActiveCategory(cat);
+    setActiveItemId(educationData[cat][0].id);
+  };
 
-  const bgTone = {
-    Academic: "bg-[radial-gradient(circle_at_20%_30%,rgba(34,211,238,0.25),transparent_60%)]",
-    Technical: "bg-[radial-gradient(circle_at_20%_30%,rgba(56,189,248,0.22),transparent_60%)]",
-    "Data Structure & Algorithm": "bg-[radial-gradient(circle_at_20%_30%,rgba(45,212,191,0.2),transparent_60%)]",
-    Business: "bg-[radial-gradient(circle_at_20%_30%,rgba(34,211,238,0.18),transparent_60%)]",
-    default: "bg-[radial-gradient(circle_at_20%_30%,rgba(34,211,238,0.2),transparent_60%)]",
-  }
+  const bgGradients = {
+    Academic:
+      "bg-[radial-gradient(circle_at_20%_30%,rgba(34,211,238,0.15),transparent_60%)]",
+    Technical:
+      "bg-[radial-gradient(circle_at_20%_30%,rgba(56,189,248,0.15),transparent_60%)]",
+    Business:
+      "bg-[radial-gradient(circle_at_20%_30%,rgba(99,102,241,0.15),transparent_60%)]",
+  };
+
+  const accentColors = {
+    Academic: "text-cyan-400",
+    Technical: "text-sky-400",
+    Business: "text-indigo-400",
+  };
+
+  const borderColors = {
+    Academic: "border-cyan-400/30 hover:border-cyan-400/60",
+    Technical: "border-sky-400/30 hover:border-sky-400/60",
+    Business: "border-indigo-400/30 hover:border-indigo-400/60",
+  };
 
   return (
     <section
-      ref={containerRef}
-      className="relative bg-transparent py-24 px-8 md:px-24 overflow-hidden"
+      className={`relative bg-[#030814] py-16 md:py-24 px-4 md:px-8 lg:px-24 overflow-hidden transition-colors duration-700 ${bgGradients[activeCategory]}`}
     >
-      {/* Background Tone Shift */}
       <motion.div
         key={activeCategory}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.18 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className={`absolute inset-0 ${bgTone[activeCategory] || bgTone.default}`}
+        className={`absolute inset-0 pointer-events-none ${bgGradients[activeCategory]}`}
       />
 
       <div className="max-w-7xl mx-auto relative z-10">
-
-        {/* LARGE TOP LABEL */}
-        <div className="mb-14">
+        {/* Header */}
+        <div className="mb-12 md:mb-16">
           <p className="text-xs tracking-[0.3em] text-slate-500 uppercase mb-4">
             Knowledge Architecture
           </p>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-            Structured Learning & <br />
-            <span className="text-cyan-300">Professional Credentials</span>
+          <h2 className="text-3xl md:text-5xl font-bold text-white">
+            Structured Learning &{" "}
+            <motion.span
+              key={activeCategory}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className={accentColors[activeCategory]}
+            >
+              Professional Credentials
+            </motion.span>
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-[260px_1fr] gap-16">
-
-          {/* LEFT NAVIGATION RAIL */}
-          <div className="space-y-10">
-
+        <div className="grid md:grid-cols-[260px_1fr] gap-12">
+          {/* LEFT */}
+          <div className="space-y-8">
             {categories.map((cat) => {
-              const isActive = activeCategory === cat
+              const isActive = activeCategory === cat;
 
               return (
                 <div key={cat}>
                   <button
                     onClick={() => handleCategoryChange(cat)}
-                    className="relative text-left"
+                    className={`text-left w-full ${
+                      isActive ? "text-white" : "text-slate-400"
+                    }`}
                   >
-                    {isActive && (
-                      <motion.div
-                        layoutId="categoryIndicator"
-                        className="absolute -left-5 top-2 w-1 h-6 bg-cyan-300 rounded"
-                      />
-                    )}
-
-                    <h3
-                      className={`text-base font-semibold tracking-wide transition ${
-                        isActive ? "text-white" : "text-slate-500"
-                      }`}
-                    >
-                      {cat}
-                    </h3>
+                    {cat}
                   </button>
 
                   {isActive && (
-                    <div className="mt-4 ml-4 space-y-3">
-                      {data[cat].map((item) => {
-                        const activeSub = activeItem.id === item.id
-                        return (
-                          <button
-                            key={item.id}
-                            onClick={() => setActiveItem(item)}
-                            className="block text-sm relative text-left"
-                          >
-                            {activeSub && (
-                              <motion.div
-                                layoutId="subIndicator"
-                                className="absolute -left-4 top-1.5 w-2 h-2 bg-cyan-300 rounded-full"
-                              />
-                            )}
-
-                            <span
-                              className={`transition ${
-                                activeSub
-                                  ? "text-white"
-                                  : "text-slate-500 hover:text-white"
-                              }`}
-                            >
-                              {item.label}
-                            </span>
-                          </button>
-                        )
-                      })}
+                    <div className="mt-4 ml-4 space-y-2">
+                      {educationData[cat].map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => setActiveItemId(item.id)}
+                          className={`block ${
+                            activeItemId === item.id
+                              ? "text-white"
+                              : "text-slate-400"
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
                     </div>
                   )}
                 </div>
-              )
+              );
             })}
           </div>
 
-          {/* RIGHT CONTENT STAGE */}
-          <div className="relative">
-
+          {/* RIGHT */}
+          <div>
             <AnimatePresence mode="wait">
-              <motion.div
-                key={activeItem.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-              >
-                {/* Meta Info */}
-                <div className="mb-8">
-                  <h3 className="text-2xl font-semibold text-white">
+              {activeItem && (
+                <motion.div
+                  key={activeItem.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="space-y-6"
+                >
+                  <h3 className="text-2xl font-bold text-white">
                     {activeItem.title}
                   </h3>
 
-                  <p className="text-cyan-300 mt-1">
+                  <p className={accentColors[activeCategory]}>
                     {activeItem.institution}
                   </p>
 
-                  <p className="text-slate-400 mt-1">
-                    {activeItem.year}
+                  <p className="text-slate-400">
+                    {activeItem.year} • {activeItem.score}
                   </p>
-                </div>
 
-                {/* PARALLAX CERTIFICATE */}
-                <motion.div
-                  style={{ y: parallaxY }}
-                  className="relative rounded-xl overflow-hidden border border-cyan-300/20 shadow-[0_25px_60px_rgba(0,0,0,0.7)]"
-                >
-                  <img
-                    src={activeItem.image}
-                    alt="Certificate"
-                    className="w-full h-[380px] object-cover"
-                  />
+                  {/* IMAGE / SVG */}
+                  <div
+                    className={`border-2 rounded-xl p-4 ${borderColors[activeCategory]}`}
+                  >
+                    {typeof activeItem.image === "string" ? (
+                      <img
+                        src={activeItem.image}
+                        alt={activeItem.title}
+                        className="w-full"
+                      />
+                    ) : (
+                      <activeItem.image className="w-20 h-20 mx-auto" />
+                    )}
+                  </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent" />
+                  {/* DETAILS */}
+                  <ul className="space-y-2">
+                    {activeItem.details.map((d, i) => (
+                      <li key={i} className="text-slate-400">
+                        • {d}
+                      </li>
+                    ))}
+                  </ul>
                 </motion.div>
-
-                {/* Bullet Details */}
-                <ul className="mt-6 space-y-2 text-slate-400 text-sm">
-                  {activeItem.details.map((d, i) => (
-                    <li key={i} className="flex gap-3">
-                      <span className="w-2 h-2 bg-cyan-300 rounded-full mt-1.5" />
-                      {d}
-                    </li>
-                  ))}
-                </ul>
-
-              </motion.div>
+              )}
             </AnimatePresence>
-
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
