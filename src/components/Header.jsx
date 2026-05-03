@@ -1,109 +1,174 @@
-import { useState } from "react";
+/**
+ * Header.jsx — Enhanced
+ * Fixed top nav with terminal aesthetic, active-section tracking,
+ * smooth scroll, animated underline indicator, and mobile command palette.
+ */
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import CommandPalette from "./CommandPalette";
-import { Button } from "./ui/button";
-import { useRef } from "react";
 
-const sections = ["about", "skills", "projects", "experience", "contact"];
+const sections = ["about", "skills", "projects", "education", "contact"];
 
 export default function Header() {
   const [active, setActive] = useState("about");
+  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const aboutRef = useRef(null);
-  const skillsRef = useRef(null);
-  const projectsRef = useRef(null);
-  const experienceRef = useRef(null);
-  const contactRef = useRef(null);
 
-  const scrollToSection = (section) => {
-    setActive(section);
-    window.scrollTo({
-      top:
-        section === "about"
-          ? aboutRef.current.offsetTop
-          : section === "skills"
-            ? skillsRef.current.offsetTop
-            : section === "projects"
-              ? projectsRef.current.offsetTop
-              : section === "experience"
-                ? experienceRef.current.offsetTop
-                : contactRef.current.offsetTop,
-      behavior: "smooth",
-    });
-  };
+  /* ── scroll spy ── */
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+      // Walk sections in order; last one whose top is <= 160px wins
+      let current = sections[0];
+      for (const id of sections) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= 160) current = id;
+      }
+      setActive(current);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* ── Cmd+K shortcut ── */
+  useEffect(() => {
+    const h = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, []);
+
+  const scrollTo = useCallback((id) => {
+    setActive(id);
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   return (
     <>
-      <div className="left-0 top-0 z-50 hidden w-full font-mono md:block">
-        <div className="flex items-center justify-between pr-10">
-          <div className="flex items-center gap-6 bg-[#081826]/70 px-8 py-4 backdrop-blur-md">
-            <div className="flex gap-2">
-              <span className="h-3 w-3 rounded-full bg-red-500" />
-              <span className="h-3 w-3 rounded-full bg-yellow-400" />
-              <span className="h-3 w-3 rounded-full bg-green-500" />
+      {/* ── Desktop Header ── */}
+      <header
+        className={`fixed left-0 top-0 z-50 hidden w-full font-mono md:block transition-all duration-500 ${
+          scrolled
+            ? "border-b border-cyan-300/10 bg-[#030a14]/85 backdrop-blur-xl shadow-[0_1px_0_rgba(34,211,238,0.08)]"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-3.5">
+          {/* Left — session tag */}
+          <motion.div
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-3"
+          >
+            <div className="flex gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F56] shadow-[0_0_6px_rgba(255,95,86,0.6)]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E] shadow-[0_0_6px_rgba(255,189,46,0.5)]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#27C93F] shadow-[0_0_6px_rgba(39,201,63,0.5)]" />
             </div>
-
-            <div className="text-sm text-slate-400">
+            <span className="text-xs text-slate-500">
               session: <span className="text-cyan-300">faijan@dev</span>
-            </div>
-          </div>
+            </span>
+          </motion.div>
 
-          <Button className="rounded-full border border-cyan-300/70 px-4 py-2 text-sm text-cyan-300 transition-all duration-300 hover:bg-cyan-300 hover:text-black">
-            Let&apos;s Talk →
-          </Button>
-        </div>
-
-        <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-cyan-300/40 to-transparent" />
-
-        <div className="bg-[#09172a]/70 px-10 py-4 backdrop-blur-md">
-          <div className="mb-4 text-sm text-slate-400">
-            <span className="text-cyan-300">$</span> open{" "}
-            <span className="text-white">{active}</span>
-            <span className="ml-1 animate-pulse text-cyan-300">▌</span>
-          </div>
-
-          <div className="flex gap-8 text-sm">
-            {sections.map((section) => (
+          {/* Centre — nav */}
+          <motion.nav
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex items-center gap-1"
+          >
+            {sections.map((s) => (
               <button
-                key={section}
-                onClick={() => scrollToSection(section)}
-                className={`transition-all duration-300 ${
-                  active === section
-                    ? "text-cyan-300"
-                    : "text-slate-500 hover:text-white"
-                }`}
+                key={s}
+                onClick={() => scrollTo(s)}
+                className="relative px-4 py-1.5 text-xs transition-colors duration-200"
               >
-                {active === section ? `[ ${section} ]` : section}
+                <span
+                  className={`transition-colors duration-200 ${
+                    active === s
+                      ? "text-white"
+                      : "text-slate-500 hover:text-slate-300"
+                  }`}
+                >
+                  {active === s ? `[ ${s} ]` : s}
+                </span>
+                {active === s && (
+                  <motion.span
+                    layoutId="nav-pill"
+                    className="absolute inset-0 rounded-md border border-cyan-300/25 bg-cyan-300/[0.07]"
+                    transition={{ type: "spring", stiffness: 380, damping: 34 }}
+                  />
+                )}
               </button>
             ))}
-          </div>
-        </div>
-      </div>
+          </motion.nav>
 
-      <div className="fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-[#081826]/70 font-mono backdrop-blur-md md:hidden">
-        <div className="flex h-[60px] items-center justify-between px-6">
-          <h1 className="text-lg font-semibold tracking-wide text-cyan-300">
-            faijan<span className="text-cyan-300">@dev</span>
-          </h1>
-
-          <div className="flex items-center gap-4">
+          {/* Right — CTA */}
+          <motion.div
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="flex items-center gap-3"
+          >
             <button
               onClick={() => setOpen(true)}
-              className="text-xl text-cyan-300"
+              className="flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 text-[11px] text-slate-400 transition-colors hover:border-cyan-300/30 hover:text-slate-200"
+            >
+              <span>⌘K</span>
+            </button>
+            <button
+              onClick={() => scrollTo("contact")}
+              className="group relative overflow-hidden rounded-full border border-cyan-300/40 px-5 py-2 text-xs text-cyan-200 transition-all hover:border-cyan-300/80 hover:text-white"
+            >
+              <span className="relative z-10">Let&apos;s Talk →</span>
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-cyan-300/10 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Thin prompt line */}
+        <div className="border-t border-white/[0.04] bg-[#030a14]/60 px-8 py-2">
+          <span className="font-mono text-[11px] text-slate-600">
+            <span className="text-cyan-400/70">$</span> open{" "}
+            <span className="text-slate-300">{active}</span>
+            <span className="ml-1 animate-pulse text-cyan-300/80">▌</span>
+          </span>
+        </div>
+      </header>
+
+      {/* ── Mobile Header ── */}
+      <header className="fixed left-0 top-0 z-50 w-full border-b border-white/[0.07] bg-[#030a14]/80 font-mono backdrop-blur-xl md:hidden">
+        <div className="flex h-14 items-center justify-between px-5">
+          <span className="text-sm font-semibold text-cyan-300">
+            faijan<span className="text-slate-500">@dev</span>
+          </span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setOpen(true)}
+              className="text-lg text-cyan-300 transition-transform active:scale-90"
             >
               ⌘
             </button>
-
-            <Button
-              pulseColor="#67e8f9"
-              className="rounded-full border border-cyan-300/70 px-4 py-2 text-sm text-cyan-300 transition-all duration-300 hover:bg-cyan-300 hover:text-black"
-              duration="1200"
+            <button
+              onClick={() => scrollTo("contact")}
+              className="rounded-full border border-cyan-300/50 px-3.5 py-1.5 text-xs text-cyan-200 transition-all hover:bg-cyan-300/10"
             >
               Hire Me →
-            </Button>
+            </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      <CommandPalette open={open} setOpen={setOpen} />
+      <CommandPalette open={open} setOpen={setOpen} onNavigate={scrollTo} />
     </>
   );
 }

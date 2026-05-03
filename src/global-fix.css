@@ -1,0 +1,24 @@
+/*
+ * global-fix.css
+ * Add this to your index.css or import at the top of main.jsx
+ *
+ * Eliminates the phantom space below the footer that appears
+ * when fixed background layers (Layout.jsx) extend beyond page content.
+ */
+
+html,
+body,
+#root {
+  /* Let the page height be exactly as tall as its content — no more */
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  /* Ensure background matches Layout's base so no flash on short pages */
+  background-color: #030a14;
+}
+
+/* Remove any margin/padding that browsers add by default */
+body {
+  margin: 0;
+  padding: 0;
+}

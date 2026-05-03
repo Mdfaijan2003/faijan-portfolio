@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import './global-fix.css';
 
 body {
   margin: 0;
@@ -84,43 +85,44 @@ body {
   0% {
     transform: translateX(0%) rotateX(0deg);
   }
+
   100% {
     transform: translateX(-50%) rotateX(0deg);
   }
 }
 
-.line-border-shell { 
-  position: relative; 
-  width: 100%; 
-  overflow: hidden; 
-  border-top: 1px solid rgba(148, 163, 184, 0.2); 
-  border-bottom: 1px solid rgba(148, 163, 184, 0.2); 
-  background: linear-gradient(180deg, rgba(6, 18, 31, 0.45) 0%, rgba(5, 24, 32, 0.35) 100%); 
-  padding: 0.9rem 0; 
-} 
+.line-border-shell {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  background: linear-gradient(180deg, rgba(6, 18, 31, 0.45) 0%, rgba(5, 24, 32, 0.35) 100%);
+  padding: 0.9rem 0;
+}
 
-.line-border-marquee { 
-  display: flex; 
-  width: max-content; 
-  animation: lineBorderScroll 26s linear infinite; 
-} 
+.line-border-marquee {
+  display: flex;
+  width: max-content;
+  animation: lineBorderScroll 26s linear infinite;
+}
 
-.line-border-shell:hover .line-border-marquee { 
-  animation-play-state: paused; 
-} 
+.line-border-shell:hover .line-border-marquee {
+  animation-play-state: paused;
+}
 
-.line-border-track { 
-  display: flex; 
-  align-items: center; 
-  gap: 0.75rem; 
-  padding-right: 0.75rem; 
-} 
+.line-border-track {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-right: 0.75rem;
+}
 
-.line-border-pill { 
-  color: #dbeafe; 
-  font-size: 0.82rem; 
-  letter-spacing: 0.08em; 
-  text-transform: uppercase; 
+.line-border-pill {
+  color: #dbeafe;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 :root {
@@ -169,7 +171,7 @@ body {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(130deg, rgba(45,212,191,0.45), rgba(125,211,252,0.1), rgba(45,212,191,0.4));
+  background: linear-gradient(130deg, rgba(45, 212, 191, 0.45), rgba(125, 211, 252, 0.1), rgba(45, 212, 191, 0.4));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -178,8 +180,15 @@ body {
 }
 
 @keyframes borderPulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 #root {

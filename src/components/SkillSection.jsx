@@ -1,146 +1,367 @@
+/**
+ * SkillSection.jsx — Rebuilt with real skills from resume
+ */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const skills = [
+const skillGroups = [
   {
-    title: "C++ / DSA",
+    title: "Data Structures & Algorithms",
+    tag: "algorithms",
     description:
-      "Engineering-first problem solving through strong algorithmic fundamentals.",
+      "Engineering-first problem solving with 200+ LeetCode and 150+ GFG problems solved. Strong foundation in C++ with focus on time/space complexity.",
+    badges: [
+      "Arrays",
+      "Trees",
+      "Graphs",
+      "Dynamic Programming",
+      "Segment Trees",
+      "Recursion",
+    ],
+    proficiency: 85,
+  },
+  {
+    title: "React & Next.js",
+    tag: "frontend",
+    description:
+      "Building premium, responsive interfaces with React.js and Next.js. Experienced with Tailwind CSS, Framer Motion, and performance-first development.",
+    badges: [
+      "React.js",
+      "Next.js",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Vite",
+      "HTML/CSS",
+    ],
+    proficiency: 88,
+  },
+  {
+    title: "Node.js & Express",
+    tag: "backend",
+    description:
+      "Modular backend architectures with clean service boundaries, JWT authentication, rate-limiting, RESTful APIs, and observability hooks.",
+    badges: [
+      "Node.js",
+      "Express.js",
+      "REST APIs",
+      "JWT",
+      "Socket.io",
+      "Middleware",
+    ],
+    proficiency: 82,
   },
   {
     title: "Database",
+    tag: "data layer",
     description:
-      "Crafting performant schemas and access patterns for predictable scale.",
+      "Designing performant schemas and access patterns. Comfortable with both document-based and relational stores including MongoDB and PostgreSQL.",
+    badges: [
+      "MongoDB",
+      "PostgreSQL",
+      "Redis",
+      "Mongoose",
+      "Indexing",
+      "Aggregation",
+    ],
+    proficiency: 78,
+  },
+  {
+    title: "C++ Development",
+    tag: "systems",
+    description:
+      "Low-level systems programming with C++ including Windows API integration, memory management, and performance-critical application development.",
+    badges: [
+      "C++",
+      "STL",
+      "Windows API",
+      "OOP",
+      "Pointers",
+      "System Programming",
+    ],
+    proficiency: 80,
+  },
+  {
+    title: "Cloud & DevOps",
+    tag: "infra",
+    description:
+      "Shipping and operating production workloads with secure deployment workflows. Experience with AWS, DigitalOcean, Docker, and CI/CD pipelines.",
+    badges: ["AWS EC2", "S3", "Docker", "CI/CD", "DigitalOcean", "Git"],
+    proficiency: 70,
+  },
+  {
+    title: "Python & Flask",
+    tag: "scripting",
+    description:
+      "Building backend services and RESTful APIs with Flask. Comfortable with Python scripting, database integration, and deployment workflows.",
+    badges: [
+      "Python",
+      "Flask",
+      "REST APIs",
+      "Database Integration",
+      "Scripting",
+    ],
+    proficiency: 72,
   },
   {
     title: "System Design",
+    tag: "architecture",
     description:
-      "Turning product requirements into architecture that balances speed and reliability.",
-  },
-  {
-    title: "Cloud",
-    description:
-      "Shipping and operating production workloads with secure deployment workflows.",
+      "Translating product requirements into scalable architecture using microservices, caching strategies, load balancing, and message queues.",
+    badges: [
+      "Microservices",
+      "Load Balancing",
+      "Caching",
+      "CDN",
+      "Message Queues",
+      "REST",
+    ],
+    proficiency: 68,
   },
 ];
 
+const languages = [
+  { name: "JavaScript", level: 90 },
+  { name: "C++", level: 82 },
+  { name: "Python", level: 72 },
+  { name: "Java", level: 65 },
+];
+
+const tools = [
+  "Git & GitHub",
+  "Docker",
+  "VS Code",
+  "Postman",
+  "Figma",
+  "MongoDB Compass",
+  "AWS Console",
+  "Linux",
+];
+
+function ProficiencyBar({ value }) {
+  return (
+    <div className="mt-5 space-y-1.5">
+      <div className="flex justify-between font-mono text-[10px] text-slate-600">
+        <span>proficiency</span>
+        <span className="text-cyan-400/80">{value}%</span>
+      </div>
+      <div className="h-1 w-full overflow-hidden rounded-full bg-white/[0.06]">
+        <motion.div
+          className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-teal-400"
+          initial={{ width: 0 }}
+          animate={{ width: `${value}%` }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function SkillsSection() {
-  const [active, setActive] = useState(skills[0]);
+  const [active, setActive] = useState(skillGroups[0]);
 
   return (
-    <section className="relative overflow-hidden bg-[#061120] px-4 py-20 sm:px-6 md:px-20 md:py-28">
-      
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(125,211,252,0.2),transparent_42%),radial-gradient(circle_at_85%_80%,rgba(45,212,191,0.18),transparent_45%)]" />
+    <section
+      id="skills"
+      className="relative bg-transparent px-4 py-28 sm:px-6 md:px-8 lg:px-12"
+    >
+      <div className="relative mx-auto max-w-7xl">
+        {/* Card shell */}
+        <div className="overflow-hidden rounded-3xl border border-white/[0.08] bg-[#07111f]/70 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-cyan-300/40 to-transparent" />
 
-      <div className="relative z-10 mx-auto max-w-7xl rounded-[1.5rem] border border-cyan-200/20 bg-slate-950/45 p-5 shadow-[0_24px_70px_rgba(15,23,42,0.8)] backdrop-blur-xl sm:rounded-[2.2rem] sm:p-8 md:p-12">
-        
-        <div className="mb-10 text-center sm:mb-16">
-          <p className="inline-flex rounded-full border border-cyan-200/30 bg-cyan-300/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-cyan-100 sm:px-4 sm:text-xs sm:tracking-[0.24em]">
-            Expertise Matrix
-          </p>
+          <div className="p-8 md:p-12">
+            {/* Header */}
+            <div className="mb-12 text-center">
+              <p className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-200">
+                Expertise Matrix
+              </p>
+              <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+                Skills with a{" "}
+                <span className="bg-gradient-to-r from-cyan-300 to-teal-300 bg-clip-text text-transparent">
+                  Product Engineering
+                </span>{" "}
+                Lens
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-slate-400">
+                Built to deliver premium interfaces, maintainable systems, and
+                reliable launches.
+              </p>
+            </div>
 
-          <h2 className="mt-4 text-2xl font-semibold leading-tight text-white sm:mt-5 sm:text-4xl md:text-5xl">
-            Skills with a Product Engineering Lens
-          </h2>
-
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-300 sm:mt-4 sm:text-base">
-            Built to deliver premium interfaces, maintainable systems, and reliable launches.
-          </p>
-        </div>
-
-        <div className="grid items-start gap-10 md:grid-cols-2 md:gap-20">
-          
-          {/* LEFT — LAPTOP PREVIEW */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="relative order-2 md:order-1"
-          >
-            <div className="rounded-2xl border border-cyan-200/20 bg-slate-950/75 p-2.5 shadow-[0_0_0_1px_rgba(34,211,238,0.2)] sm:rounded-3xl sm:p-3">
-              
-              <div className="overflow-hidden rounded-xl border border-white/10 bg-[#010916] sm:rounded-2xl">
-                
-                <div className="flex items-center justify-between border-b border-white/10 bg-slate-900/85 px-3 py-2 sm:px-4">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <div className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-                    <div className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+            {/* Two-column: preview + skill grid */}
+            <div className="grid items-start gap-10 md:grid-cols-2 md:gap-14">
+              {/* LEFT: code preview */}
+              <motion.div
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="order-2 md:order-1"
+              >
+                <div className="overflow-hidden rounded-2xl border border-cyan-200/15 bg-[#030d1a] shadow-[0_0_0_1px_rgba(34,211,238,0.08),0_20px_50px_rgba(0,0,0,0.6)]">
+                  <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
+                    <div className="flex gap-1.5">
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F56]" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E]" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#27C93F]" />
+                    </div>
+                    <span className="font-mono text-[11px] text-slate-500">
+                      capability-preview.tsx
+                    </span>
+                    <span className="rounded bg-cyan-300/10 px-1.5 py-0.5 font-mono text-[10px] text-cyan-400">
+                      ● live
+                    </span>
                   </div>
 
-                  <span className="text-[10px] tracking-wide text-slate-400 sm:text-[11px]">
-                    capability-preview.tsx
-                  </span>
+                  <div className="min-h-[300px] p-6 md:min-h-[340px] md:p-8">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={active.title}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -12 }}
+                        transition={{ duration: 0.26 }}
+                      >
+                        <p className="mb-4 font-mono text-xs">
+                          <span className="text-violet-400">const </span>
+                          <span className="text-cyan-300">focusArea</span>
+                          <span className="text-slate-500"> = </span>
+                          <span className="text-emerald-300">
+                            &quot;{active.tag}&quot;
+                          </span>
+                          <span className="text-slate-600">;</span>
+                        </p>
+                        <h3 className="text-xl font-bold text-white md:text-2xl">
+                          {active.title}
+                        </h3>
+                        <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                          {active.description}
+                        </p>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {active.badges.map((b) => (
+                            <span
+                              key={b}
+                              className="rounded-full border border-cyan-300/15 bg-cyan-300/[0.06] px-3 py-1 font-mono text-[11px] text-cyan-200/80"
+                            >
+                              {b}
+                            </span>
+                          ))}
+                        </div>
+                        <ProficiencyBar value={active.proficiency} />
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
                 </div>
+                <div className="mx-4 h-3 rounded-b-xl border-x border-b border-white/[0.06] bg-white/[0.02]" />
+                <div className="mx-auto mt-1 h-1 w-20 rounded-full bg-white/[0.05]" />
+              </motion.div>
 
-                <div className="min-h-[220px] p-5 sm:min-h-[250px] sm:p-7 md:min-h-[290px] md:p-10">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={active.title}
-                      initial={{ opacity: 0, y: 14 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -14 }}
-                      transition={{ duration: 0.28 }}
-                    >
-                      <p className="font-mono text-[11px] text-cyan-300 sm:text-xs">
-                        &gt; focus_area = "{active.title}"
-                      </p>
-
-                      <h3 className="mt-3 text-2xl font-semibold text-white sm:mt-4 sm:text-3xl">
-                        {active.title}
-                      </h3>
-
-                      <p className="mt-3 text-sm leading-relaxed text-slate-300 sm:mt-4 sm:text-base">
-                        {active.description}
-                      </p>
-                    </motion.div>
-                  </AnimatePresence>
+              {/* RIGHT: skill buttons */}
+              <div className="order-1 md:order-2">
+                <div className="grid grid-cols-2 gap-2.5">
+                  {skillGroups.map((skill, i) => {
+                    const isActive = active.title === skill.title;
+                    return (
+                      <motion.button
+                        key={skill.title}
+                        initial={{ opacity: 0, y: 14 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.06 }}
+                        whileHover={{ scale: 1.03, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        onMouseEnter={() => setActive(skill)}
+                        onClick={() => setActive(skill)}
+                        className={`relative overflow-hidden rounded-xl border px-4 py-3.5 text-left text-sm font-medium transition-all duration-200 ${
+                          isActive
+                            ? "border-cyan-300/50 bg-cyan-300/[0.1] text-white shadow-[0_0_20px_rgba(34,211,238,0.15)]"
+                            : "border-white/[0.07] bg-white/[0.03] text-slate-300 hover:border-cyan-300/25 hover:text-white"
+                        }`}
+                      >
+                        {isActive && (
+                          <motion.span
+                            layoutId="skill-glow"
+                            className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-300/10 to-teal-300/5"
+                            transition={{
+                              type: "spring",
+                              stiffness: 380,
+                              damping: 34,
+                            }}
+                          />
+                        )}
+                        <span className="relative z-10 mb-1 block font-mono text-[10px] text-slate-600">
+                          {skill.tag}
+                        </span>
+                        <span className="relative z-10 text-[13px] leading-snug">
+                          {skill.title}
+                        </span>
+                      </motion.button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
 
-            <div className="mt-3 h-4 rounded-xl border border-white/10 bg-slate-900/90 sm:h-5" />
-            <div className="mx-auto mt-1 h-1.5 w-24 rounded-full bg-slate-700/70 sm:w-28" />
-          </motion.div>
-
-          {/* RIGHT — SKILLS GRID */}
-          <div className="order-1 space-y-4 sm:space-y-6 md:order-2">
-            
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
-              {skills.map((skill) => {
-                const isActive = active.title === skill.title;
-
-                return (
-                  <motion.button
-                    key={skill.title}
-                    type="button"
-                    onMouseEnter={() => setActive(skill)}
-                    onFocus={() => setActive(skill)}
-                    onClick={() => setActive(skill)}
-                    whileHover={{ scale: 1.04, y: -2 }}
-                    className={`rounded-xl border px-3 py-3 text-center text-xs font-medium transition-all sm:px-4 sm:py-4 sm:text-sm
-                      ${
-                        isActive
-                          ? "border-cyan-300/60 bg-cyan-300/15 text-white shadow-[0_0_24px_rgba(45,212,191,0.35)]"
-                          : "border-white/15 bg-slate-900/55 text-slate-200 hover:border-cyan-300/40 hover:text-white"
-                      }`}
+            {/* Languages bar row */}
+            <div className="mt-10 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+              <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300/70">
+                Languages
+              </p>
+              <div className="grid grid-cols-2 gap-x-10 gap-y-4 sm:grid-cols-4">
+                {languages.map((lang, i) => (
+                  <motion.div
+                    key={lang.name}
+                    initial={{ opacity: 0, y: 8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.07 }}
                   >
-                    {skill.title}
-                  </motion.button>
-                );
-              })}
+                    <div className="mb-1.5 flex justify-between">
+                      <span className="font-mono text-xs text-slate-300">
+                        {lang.name}
+                      </span>
+                      <span className="font-mono text-[11px] text-slate-600">
+                        {lang.level}%
+                      </span>
+                    </div>
+                    <div className="h-1 w-full overflow-hidden rounded-full bg-white/[0.06]">
+                      <motion.div
+                        className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-teal-400"
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${lang.level}%` }}
+                        viewport={{ once: true }}
+                        transition={{
+                          duration: 0.8,
+                          delay: i * 0.1,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                      />
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4 sm:p-5">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-cyan-100 sm:text-xs sm:tracking-[0.2em]">
-                Delivery Standard
+            {/* Tools grid */}
+            <div className="mt-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+              <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300/70">
+                Tools & Platforms
               </p>
-
-              <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:mt-3 sm:text-sm">
-                Every capability is aligned to one outcome: premium UX, engineering depth, and launch-ready execution.
-              </p>
+              <div className="flex flex-wrap gap-2">
+                {tools.map((tool, i) => (
+                  <motion.span
+                    key={tool}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1.5 font-mono text-xs text-slate-400 transition-colors hover:border-cyan-300/25 hover:text-slate-200"
+                  >
+                    {tool}
+                  </motion.span>
+                ))}
+              </div>
             </div>
-
           </div>
         </div>
       </div>
