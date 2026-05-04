@@ -15,6 +15,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import emailjs from "@emailjs/browser";
 
 function Field({
   num,
@@ -120,27 +121,58 @@ export default function ContactSection() {
   const [status, setStatus] = useState("idle");
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
-    setTimeout(() => {
-      const sub = encodeURIComponent(`Contact from ${form.name}`);
-      const body = encodeURIComponent(
-        `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.number}\nMessage: ${form.message}`,
+
+    const serviceId = import.meta.env.VITE_SERVICE_ID;
+    const publicKey = import.meta.env.VITE_PUBLIC_KEY;
+    const ownerTplId = import.meta.env.VITE_TEMPLATE_ID_OWNER_NOTIFICATION;
+    const userTplId = import.meta.env.VITE_TEMPLATE_ID_USER_CONFIRMATION;
+    const ownerPhone = import.meta.env.VITE_OWNER_PHONE;
+
+    try {
+      // 1. Notify you (the owner)
+      await emailjs.send(
+        serviceId,
+        ownerTplId,
+        {
+          from_name: form.name,
+          from_email: form.email,
+          from_phone: form.number,
+          message: form.message,
+          owner_phone: ownerPhone,
+        },
+        publicKey,
       );
-      window.open(
-        `mailto:mdfaijancoder@gmail.com?subject=${sub}&body=${body}`,
-        "_blank",
+
+      // 2. Confirm to the sender
+      await emailjs.send(
+        serviceId,
+        userTplId,
+        {
+          to_name: form.name,
+          to_email: form.email,
+          message: form.message,
+        },
+        publicKey,
       );
-      const wa = encodeURIComponent(
-        `Hi, I am ${form.name}. Email: ${form.email}. Message: ${form.message}`,
-      );
-      window.open(
-        `https://wa.me/${form.number.replace(/\D/g, "")}?text=${wa}`,
-        "_blank",
-      );
+
+      setTimeout(() => {
+        const wa = encodeURIComponent(
+          `Hi, I am ${form.name}. Email: ${form.email}. Message: ${form.message}`,
+        );
+        window.open(
+          `https://wa.me/${ownerPhone.replace(/\D/g, "")}?text=${wa}`,
+          "_blank",
+        );
+      }, 1100);
+
       setStatus("sent");
-    }, 1100);
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setStatus("error");
+    }
   };
 
   return (
