@@ -22,7 +22,7 @@ export const projectsData = [
     accentBg: "bg-cyan-300/[0.07]",
     headerGradient: "from-cyan-500/20 via-teal-500/10 to-transparent",
     github: "https://github.com/Mdfaijan2003/the-royal-turf",
-    live: "https://the-royal-turf.onrender.com/",
+    live: "https://theroyalturf.in",
     stack: [
       "HTML",
       "Node.js",
